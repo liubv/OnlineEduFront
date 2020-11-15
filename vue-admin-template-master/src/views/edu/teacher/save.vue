@@ -50,15 +50,26 @@ export default {
         }
     },
     created() {//页面渲染之前执行
-    //判断路径中是否有id值
-    if(this.$route.params && this.$route.params.id){
-        //从路径获取id值
-        const id = this.$route.params.id
-        //调用根据id查询的方法
-        this.getInfo(id)
-    } 
+        this.init()
+    },
+    watch: {//当路由发生变化，此方法就会执行
+        $route(to,from) {
+            this.init()
+        }
     },
     methods:{
+        init(){
+            //判断路径中是否有id值
+            if(this.$route.params && this.$route.params.id){
+                //从路径获取id值
+                const id = this.$route.params.id
+                //调用根据id查询的方法
+                this.getInfo(id)
+            } else {
+                //清空teacher
+                this.teacher = {}
+            }
+        },
         //根据id回显数据
         getInfo(id){
             teacherApi.getTeacherInfo(id)
