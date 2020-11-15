@@ -28,7 +28,7 @@
       <!-- 讲师头像：TODO -->
 
       <el-form-item>
-        <el-button :disabled="saveBtnDisabled" type="primary" @click="saveTeacher">保存</el-button>
+        <el-button :disabled="saveBtnDisabled" type="primary" @click="addOrUpdate">保存</el-button>
       </el-form-item>
     </el-form>
     </div>
@@ -49,16 +49,46 @@ export default {
             saveBtnDisabled:false
         }
     },
-    created() {
-        
+    created() {//页面渲染之前执行
+    //判断路径中是否有id值
+    if(this.$route.params && this.$route.params.id){
+        //从路径获取id值
+        const id = this.$route.params.id
+        //调用根据id查询的方法
+        this.getInfo(id)
+    } 
     },
     methods:{
-        saveOrUpdate() {
+        //根据id回显数据
+        getInfo(id){
+            teacherApi.getTeacherInfo(id)
+            .then(response =>{
+                this.teacher = response.data.teacher
+            })
+        },
+        addOrUpdate(){
+            if(!this.teacher.id){
+                this.addTeacher()
+            } else {
+                this.updateTeacher()
+            }
+        }, 
 
+        //修改
+        updateTeacher() {
+            teacherApi.updateTeacherInfo(this.teacher)
+            .then(response =>{
+                //提示信息
+                this.$message({
+                    type: 'success',
+                    message: '修改成功!'
+                })
+                this.$router.push({path:'/teacher/table'})
+            })
         },
 
         //添加讲师方法
-        saveTeacher() {
+        addTeacher() {
             teacherApi.addTeacher(this.teacher)
             .then(response =>{
                 //提示信息

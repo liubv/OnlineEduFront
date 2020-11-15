@@ -28,5 +28,21 @@ export default{
             //data表示把对象转换成json进行传递到接口
             data:teacher
           })
+    },
+    //4. 根据id查询
+    getTeacherInfo(id){
+        return request({
+            url:`/eduservice/teacher/getTeacher/${id}`,
+            method: 'get',
+          })
+    },
+    //5. 修改
+    updateTeacherInfo(teacher) {
+        return request({
+            url:`/eduservice/teacher/updateTeacher`,
+            method: 'post',
+            //data表示把对象转换成json进行传递到接口
+            data:teacher
+          })
     }
 }

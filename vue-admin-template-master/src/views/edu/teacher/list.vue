@@ -68,7 +68,7 @@
 
       <el-table-column label="操作" width="200" align="center">
         <template slot-scope="scope">
-          <router-link :to="'/edu/teacher/edit/'+scope.row.id">
+          <router-link :to="'/teacher/edit/'+scope.row.id">
             <el-button type="primary" size="mini" icon="el-icon-edit">修改</el-button>
           </router-link>
           <el-button type="danger" size="mini" icon="el-icon-delete" @click="removeDataById(scope.row.id)">删除</el-button>
@@ -89,7 +89,7 @@
 </template>
 <script>
 //引入 teacher.js文件
-import teacher from '@/api/edu/teacher'
+import teacherApi from '@/api/edu/teacher'
 
 export default {
     //核心代码
@@ -111,7 +111,7 @@ export default {
     methods:{//创建具体的方法，调用方法。
         getList(page = 1) {
             this.page = page
-            teacher.getTeacherListPage(this.page,this.limit,this.teacherQuery)
+            teacherApi.getTeacherListPage(this.page,this.limit,this.teacherQuery)
                 .then(response =>{
                     //response接口返回的数据
                     this.list = response.data.rows
@@ -128,13 +128,13 @@ export default {
             this.getList()
         },
         removeDataById(id){
-            this.$confirm('此操作将永久删除讲师纪律, 是否继续?', '提示', {
+            this.$confirm('此操作将永久删除讲师记录, 是否继续?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             })
                 .then(() => {
-                    teacher.deleteTeacherId(id)
+                    teacherApi.deleteTeacherId(id)
                         .then(response =>{
                             this.$message({
                                 type: 'success',
@@ -142,12 +142,6 @@ export default {
                             })
                             //回到列表页面
                             this.getList()
-                        })
-                        .catch(error =>{
-                            this.$message({
-                            type: 'failed',
-                            message: '删除失败!'
-                            })
                         })
                 })
         }
