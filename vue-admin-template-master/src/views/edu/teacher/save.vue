@@ -95,11 +95,12 @@ export default {
     methods:{
         //关闭头像上传弹框的方法
         close(){
-            this.imagecropperShow=false
+            this.imagecropperShow = false
+            this.imagecropperKey = this.imagecropperKey + 1
         },
         //头像上传成功方法
         cropSuccess(data){
-            this.imagecropperShow=false
+            this.imagecropperShow = false
             //上传成功之后返回图片地址
             this.teacher.avatar = data.url
         },
