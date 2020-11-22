@@ -14,4 +14,17 @@ export default{
             method: 'get',
         })
     },
+    getCourseInfo(courseId){
+        return request({
+            url:`/eduservice/course/getCourseInfo/${courseId}`,
+            method: 'get',
+        })
+    },
+    updateCourseInfo(courseInfo){
+        return request({
+            url:`/eduservice/course/updateCourseInfo`,
+            method: 'post',
+            data:courseInfo
+        })
+    },
 }

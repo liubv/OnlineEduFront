@@ -106,16 +106,57 @@ export default {
         BASE_API:process.env.BASE_API,
         subjectOneList:[],
         subjectTwoList:[],
-        teacherList:[]
+        teacherList:[],
+        courseId:''
     }
   },
 
   created() {
-    this.getListTeacher()
-    this.getOneSubject()
+      this.init()
+    
   },
-
+  watch:{
+      $route(to,from){
+        this.init()
+      }
+  },
   methods: {
+    init(){
+        if(this.$route.params && this.$route.params.id){
+            this.courseId = this.$route.params.id
+            this.getInfo()
+        } else {
+            this.courseInfo = {
+                title: '',
+            subjectId: '',
+            subjectParentId:'',
+            teacherId: '',
+            lessonNum: 0,
+            description: '',
+            cover: '/static/timg.jpg',
+            price: 0
+            }
+            this.getListTeacher()
+            this.getOneSubject()
+        }
+    },
+    getInfo(){
+        courseApi.getCourseInfo(this.courseId)
+        .then(response =>{
+            this.courseInfo = response.data.courseInfoVo
+            subjectApi.getSubjectList()
+            .then(response =>{
+                this.subjectOneList = response.data.list
+                for(var i = 0;i < this.subjectOneList.length;i++){
+                    var oneSubject = this.subjectOneList[i]
+                    if(oneSubject.id == this.courseInfo.subjectParentId){
+                        this.subjectTwoList = oneSubject.children
+                    }
+                }
+            })
+        })
+        this.getListTeacher()
+    },
     handleAvatarSuccess(res,file) {
         this.courseInfo.cover = res.data.url
     },
@@ -131,6 +172,7 @@ export default {
         }
         return isJPG && isLt2M
     },
+
     subjectOneChanged(value) {
         for(let i = 0; i < this.subjectOneList.length;i++){
             if(this.subjectOneList[i].id === value) {
@@ -153,7 +195,7 @@ export default {
         })
     },
 
-    saveOrUpdate() {
+    saveInfo() {
         courseApi.addCourseInfo(this.courseInfo)
         .then(response =>{
             //提示信息
@@ -162,9 +204,26 @@ export default {
                 message: '添加课程成功!'
             })
             this.$router.push({ path: `/course/chapter/${response.data.courseId}` })
-        })
-      
-    }
+        }) 
+    },
+    updateInfo() {
+        courseApi.updateCourseInfo(this.courseInfo)
+        .then(response =>{
+            //提示信息
+            this.$message({
+                type: 'success',
+                message: '更新课程成功!'
+            })
+            this.$router.push({ path: `/course/chapter/${response.data.courseId}` })
+        }) 
+    },
+    saveOrUpdate() {
+        if(!this.courseInfo.id) {
+            this.saveInfo()
+        } else {
+            this.updateInfo()
+        }
+    },
   }
 }
 </script>
