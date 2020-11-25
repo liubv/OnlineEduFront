@@ -91,12 +91,12 @@ export const constantRouterMap = [
   {
     path: '/course',
     component: Layout,
-    redirect: '/course/table',
+    redirect: '/course/list',
     name: '课程管理',
     meta: { title: '课程管理', icon: 'example' },
     children: [
       {
-        path: 'table',
+        path: 'list',
         name: '课程列表',
         component: () => import('@/views/edu/course/list.vue'),
         meta: { title: '课程列表', icon: 'table' }
