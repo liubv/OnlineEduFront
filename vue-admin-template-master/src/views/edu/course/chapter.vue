@@ -10,8 +10,9 @@
       <el-step title="最终发布"/>
     </el-steps>
 
+    <el-button type="text" @click="openChapterDialog()">添加章节</el-button>
         <!-- 章节 -->
-    <ul class="chanpterList">
+    <ul class="chapterList">
         <li
             v-for="chapter in chapterVideoList"
             :key="chapter.id">
@@ -19,20 +20,19 @@
                 {{ chapter.title }}
 
                 <span class="acts">
-                    <el-button type="text">添加课时</el-button>
-                    <el-button style="" type="text">编辑</el-button>
-                    <el-button type="text">删除</el-button>
+                    <el-button style="" type="text" @click="openEditChapter(chapter.id)">编辑</el-button>
+                    <el-button type="text" @click="deleteChapter(chapter.id)">删除</el-button>
                 </span>
             </p>
 
             <!-- 视频 -->
-            <ul class="chanpterList videoList">
+            <ul class="chapterList videoList">
                 <li
                     v-for="video in chapter.children"
                     :key="video.id">
                     <p>{{ video.title }}
                         <span class="acts">
-                            <el-button type="text">编辑</el-button>
+                            <el-button type="text" >编辑</el-button>
                             <el-button type="text">删除</el-button>
                         </span>
                     </p>
@@ -40,6 +40,22 @@
             </ul>
         </li>
     </ul>
+
+    <!-- 添加和修改章节表单 -->
+    <el-dialog :visible.sync="dialogChapterFormVisible" title="添加章节">
+        <el-form :model="chapter" label-width="120px">
+            <el-form-item label="章节标题">
+                <el-input v-model="chapter.title"/>
+            </el-form-item>
+            <el-form-item label="章节排序">
+                <el-input-number v-model="chapter.sort" :min="0" controls-position="right"/>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogChapterFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="saveOrUpdate">确 定</el-button>
+        </div>
+    </el-dialog>
 
     <el-form label-width="120px">
       <el-form-item>
@@ -57,7 +73,13 @@ export default {
         return {
             chapterVideoList:[],
             courseId:'',
-            saveBtnDisabled: false // 保存按钮是否禁用
+            saveBtnDisabled: false, // 保存按钮是否禁用
+            dialogChapterFormVisible: false,
+            chapter:{
+                courseId: '',
+                title: '',
+                sort: 0
+            }
         }
     },
 
@@ -69,6 +91,68 @@ export default {
     },
 
     methods: {
+        deleteChapter(chapterId){
+            this.$confirm('此操作将永久删除章节记录, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            })
+                .then(() => {
+                    chapterApi.deleteChapter(chapterId)
+                        .then(response =>{
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            })
+                            //回到列表页面
+                            this.getChapterVideo()
+                        })
+                })
+        },
+        openEditChapter(chapterId){
+            //弹框
+            this.dialogChapterFormVisible = true;
+            //调用接口
+            chapterApi.getChapter(chapterId)
+            .then(response =>{
+                this.chapter = response.data.chapter
+            })
+        },
+        openChapterDialog(){
+            this.chapter.title = ''
+            this.chapter.sort = 0
+            this.dialogChapterFormVisible = true
+        },
+        addChapter(){
+            this.chapter.courseId = this.courseId
+            chapterApi.addChapter(this.chapter)
+            .then(response =>{
+                this.dialogChapterFormVisible = false
+                this.$message({
+                    type: 'success',
+                    message: '添加章节成功!'
+                })
+                this.getChapterVideo()
+            })            
+        },
+        updateChapter(){
+            chapterApi.updateChapter(this.chapter)
+            .then(response =>{
+                this.dialogChapterFormVisible = false
+                this.$message({
+                    type: 'success',
+                    message: '修改章节成功!'
+                })
+                this.getChapterVideo()
+            })
+        },
+        saveOrUpdate() {
+            if(this.chapter.id == ''){
+                this.addChapter()
+            }else{
+                this.updateChapter();
+            }
+        },
         getChapterVideo(){
             chapterApi.getAllChapterVideo(this.courseId)
             .then(response =>{
@@ -88,17 +172,17 @@ export default {
 }
 </script>
 <style scoped>
-.chanpterList{
+.chapterList{
     position: relative;
     list-style: none;
     margin: 0;
     padding: 0;
 }
-.chanpterList li{
+.chapterList li{
   position: relative;
 }
-.chanpterList p{
-  float: left;
+.chapterList p{
+  /* float: left; */
   font-size: 20px;
   margin: 10px 0;
   padding: 10px;
@@ -107,7 +191,7 @@ export default {
   width: 100%;
   border: 1px solid #DDD;
 }
-.chanpterList .acts {
+.chapterList .acts {
     float: right;
     font-size: 14px;
 }
