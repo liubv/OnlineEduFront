@@ -169,7 +169,6 @@ export default {
         },
         //成功回调
         handleVodUploadSuccess(response, file, fileList) {
-            console.log("success")
             this.video.videoSourceId = response.data.videoId
             this.video.videoOriginalName = file.name
         },
@@ -218,6 +217,10 @@ export default {
                     free: 0,
                     videoSourceId: ''
                 }
+                //文件列表清空
+                this.fileList = []
+                this.video.videoSourceId = ''
+                this.video.videoOriginalName = ''
                 this.getChapterVideo()
             })
         },
