@@ -13,8 +13,15 @@ export default {
     //删除小节
     deleteVideo(id) {
         return request({
-            url: '/eduservice/video/'+id,
+            url: `/eduservice/video/${id}`,
             method: 'delete'
           })
     },
+    //删除阿里云视频
+    deleteAlyVod(id){
+        return request({
+            url: `/eduvod/video/removeAlyVideo/${id}`,
+            method: 'delete'
+          })
+    }
 }

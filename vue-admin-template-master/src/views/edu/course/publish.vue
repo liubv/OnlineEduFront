@@ -60,24 +60,21 @@ export default {
       this.$router.push({ path: '/course/chapter/'+this.courseId })
     },
     publish() {
-      courseApi.publishCourse(this.courseId)
-      .then(response =>{
-          this.$confirm('发布课程, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-          })
-          .then(() => {
-              courseApi.publishCourse(this.courseId)
-                  .then(response =>{
-                      this.$message({
-                          type: 'success',
-                          message: '发布成功!'
-                      })
-
+      this.$confirm('发布课程, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+      })
+      .then(() => {
+          courseApi.publishCourse(this.courseId)
+              .then(response =>{
+                  this.$message({
+                      type: 'success',
+                      message: '发布成功!'
                   })
-              this.$router.push({ path: '/course/list' })
-          })
+
+              })
+          this.$router.push({ path: '/course/list' })
       })
     }
   }

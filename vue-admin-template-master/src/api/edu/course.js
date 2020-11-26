@@ -39,4 +39,17 @@ export default{
             method: 'get',
         })
     },
+    getCourseCondition(current,limit,courseQuery){
+        return request({
+            url:`/eduservice/course/getCourseCondition/${current}/${limit}`,
+            method: 'post',
+            data:courseQuery
+        })
+    },
+    deleteCourse(courseId){
+        return request({
+            url:`/eduservice/course/${courseId}`,
+            method: 'delete',
+        })
+    },
 }
