@@ -1,9 +1,16 @@
 module.exports = {
+  plugins: [
+    { src: '~/plugins/nuxt-swiper-plugin.js', ssr: false }
+  ],
+
+  css: [
+    'swiper/dist/css/swiper.css'
+  ],
   /*
   ** Headers of the page
   */
   head: {
-    title: '在线教育平台',
+    title: '在线教育项目',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
