@@ -135,6 +135,7 @@ import "~/assets/css/theme.css";
 import "~/assets/css/global.css";
 import "~/assets/css/web.css";
 
+import loginApi from '@/api/login'
 import cookie from 'js-cookie'
 
 export default {
@@ -152,9 +153,23 @@ export default {
     }
   },
   created(){
+    this.token = this.$route.query.token
+    if(this.token){
+      this.wxLogin()
+    }
     this.showInfo()
   },
   methods:{
+    wxLogin(){
+      //把token放到cookie
+      cookie.set('guli_token',this.token,{domain:'localhost'})
+      cookie.set('guli_ucenter',"",{domain:'localhost'})
+      loginApi.getLoginUserInfo()
+      .then(response =>{
+        this.loginInfo = response.data.data.userInfo
+        cookie.set('guli_ucenter',this.loginInfo,{domain:'localhost'})
+      })
+    },
     showInfo() {
       //debugger
       var jsonStr = cookie.get("guli_ucenter");
