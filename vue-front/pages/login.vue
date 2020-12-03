@@ -31,7 +31,7 @@
       <div class="more-sign">
         <h6>社交帐号登录</h6>
         <ul>
-          <li><a id="weixin" class="weixin" target="_blank" href="http://qy.free.idcfengye.com/api/ucenter/weixinLogin/login"><i class="iconfont icon-weixin"/></a></li>
+          <li><i  class="iconfont icon-weixin" @click="wxLogin()"/></li>
           <li><a id="qq" class="qq" target="_blank" href="#"><i class="iconfont icon-qq"/></a></li>
         </ul>
       </div>
@@ -60,6 +60,9 @@
     },
 
     methods: {
+      wxLogin(){
+        loginApi.wxlogin().then()
+      },
       submitLogin(){
             loginApi.login(this.user).then(response => {
               if(response.data.success){

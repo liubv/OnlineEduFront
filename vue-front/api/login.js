@@ -14,4 +14,10 @@ export default {
            // headers: {'token': cookie.get('guli_token')}
     })
   },
+  wxlogin(){
+    return request({
+      url: `/api/ucenter/wx/login`,
+      method: 'get',
+    })
+  }
 }

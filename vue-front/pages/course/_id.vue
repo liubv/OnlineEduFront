@@ -5,27 +5,27 @@
       <section class="path-wrap txtOf hLh30">
         <a href="#" title class="c-999 fsize14">首页</a>
         \
-        <a href="#" title class="c-999 fsize14">课程列表</a>
+        <a href="#" title class="c-999 fsize14">{{courseWebVo.subjectLevelOne}}</a>
         \
-        <span class="c-333 fsize14">Java精品课程</span>
+        <span class="c-333 fsize14">{{courseWebVo.subjectLevelTwo}}</span>
       </section>
       <div>
         <article class="c-v-pic-wrap" style="height: 357px;">
           <section class="p-h-video-box" id="videoPlay">
-            <img src="~/assets/photo/course/1442295581911.jpg" alt="Java精品课程" class="dis c-v-pic">
+            <img :src="courseWebVo.cover" :alt="courseWebVo.title" class="dis c-v-pic" height="357px">
           </section>
         </article>
         <aside class="c-attr-wrap">
           <section class="ml20 mr15">
             <h2 class="hLh30 txtOf mt15">
-              <span class="c-fff fsize24">Java精品课程</span>
+              <span class="c-fff fsize24">{{courseWebVo.title}}</span>
             </h2>
             <section class="c-attr-jg">
               <span class="c-fff">价格：</span>
-              <b class="c-yellow" style="font-size:24px;">￥0.00</b>
+              <b class="c-yellow" style="font-size:24px;">￥{{courseWebVo.price}}</b>
             </section>
             <section class="c-attr-mt c-attr-undis">
-              <span class="c-fff fsize14">主讲： 唐嫣&nbsp;&nbsp;&nbsp;</span>
+              <span class="c-fff fsize14">主讲： {{courseWebVo.teacherName}}&nbsp;&nbsp;&nbsp;</span>
             </section>
             <section class="c-attr-mt of">
               <span class="ml10 vam">
@@ -45,7 +45,7 @@
               <aside>
                 <span class="c-fff f-fM">购买数</span>
                 <br>
-                <h6 class="c-fff f-fM mt10">150</h6>
+                <h6 class="c-fff f-fM mt10">{{courseWebVo.buyCount}}</h6>
               </aside>
             </li>
             <li>
@@ -85,16 +85,7 @@
                   </h6>
                   <div class="course-txt-body-wrap">
                     <section class="course-txt-body">
-                      <p>
-                        Java的发展历史，可追溯到1990年。当时Sun&nbsp;Microsystem公司为了发展消费性电子产品而进行了一个名为Green的项目计划。该计划
-                        负责人是James&nbsp;Gosling。起初他以C++来写一种内嵌式软件，可以放在烤面包机或PAD等小型电子消费设备里，使得机器更聪明，具有人工智
-                        能。但他发现C++并不适合完成这类任务！因为C++常会有使系统失效的程序错误，尤其是内存管理，需要程序设计师记录并管理内存资源。这给设计师们造成
-                        极大的负担，并可能产生许多bugs。&nbsp;
-                        <br>为了解决所遇到的问题，Gosling决定要发展一种新的语言，来解决C++的潜在性危险问题，这个语言名叫Oak。Oak是一种可移植性语言，也就是一种平台独立语言，能够在各种芯片上运行。
-                        <br>1994年，Oak技术日趋成熟，这时网络正开始蓬勃发展。Oak研发小组发现Oak很适合作为一种网络程序语言。因此发展了一个能与Oak配合的浏
-                        览器--WebRunner，后更名为HotJava，它证明了Oak是一种能在网络上发展的程序语言。由于Oak商标已被注册，工程师们便想到以自己常
-                        享用的咖啡(Java)来重新命名，并于Sun&nbsp;World&nbsp;95中被发表出来。
-                      </p>
+                      <p v-html="courseWebVo.description">{{courseWebVo.description}}</p>
                     </section>
                   </div>
                 </div>
@@ -108,25 +99,23 @@
                       <menu id="lh-menu" class="lh-menu mt10 mr10">
                         <ul>
                           <!-- 文件目录 -->
-                          <li class="lh-menu-stair">
-                            <a href="javascript: void(0)" title="第一章" class="current-1">
-                              <em class="lh-menu-i-1 icon18 mr10"></em>第一章
+                          <li class="lh-menu-stair" v-for="chapter in chapterVideoList" :key="chapter.id">
+                            <a href="javascript: void(0)" :title="chapter.title" class="current-1">
+                              <em class="lh-menu-i-1 icon18 mr10"></em>{{chapter.title}}
                             </a>
+
                             <ol class="lh-menu-ol" style="display: block;">
-                              <li class="lh-menu-second ml30">
-                                <a href="#" title>
-                                  <span class="fr">
-                                    <i class="free-icon vam mr10">免费试听</i>
+                              <li class="lh-menu-second ml30" v-for="video in chapter.children" :key="video.id">
+                                <a :href="'/player/'+video.videoSourceId" target="_blank">
+                                  <span v-if="video.free === true" class="fr">
+                                        <i class="free-icon vam mr10">免费试听</i>
                                   </span>
-                                  <em class="lh-menu-i-2 icon16 mr5">&nbsp;</em>第一节
+                                  <em class="lh-menu-i-2 icon16 mr5">&nbsp;</em>{{video.title}}
                                 </a>
                               </li>
-                              <li class="lh-menu-second ml30">
-                                <a href="#" title class="current-2">
-                                  <em class="lh-menu-i-2 icon16 mr5">&nbsp;</em>第二节
-                                </a>
-                              </li>
+                              
                             </ol>
+
                           </li>
                         </ul>
                       </menu>
@@ -134,6 +123,92 @@
                   </section>
                 </div>
                 <!-- /课程大纲 -->
+                <!-- 课程评论 开始 -->
+                <div class="mt50 commentHtml"><div>
+                    <h6 class="c-c-content c-infor-title" id="i-art-comment">
+                      <span class="commentTitle">课程评论</span>
+                    </h6>
+                    <section class="lh-bj-list pr mt20 replyhtml">
+                      <ul>
+                        <li class="unBr">
+                          <aside class="noter-pic">
+                            <img width="50" height="50" class="picImg" src="~/assets/img/avatar-boy.gif">
+                            </aside>
+                          <div class="of">
+                            <section class="n-reply-wrap">
+                              <fieldset>
+                                <textarea name="" v-model="comment.content" placeholder="输入您要评论的文字" id="commentContent"></textarea>
+                              </fieldset>
+                              <p class="of mt5 tar pl10 pr10">
+                                <span class="fl "><tt class="c-red commentContentmeg" style="display: none;"></tt></span>
+                                <input type="button" @click="addComment()" value="回复" class="lh-reply-btn">
+                              </p>
+                            </section>
+                          </div>
+                        </li>
+                      </ul>
+                    </section>
+                    <section class="">
+                        <section class="question-list lh-bj-list pr">
+                          <ul class="pr10">
+                            <li v-for="(comment,index) in data.items" v-bind:key="index">
+                                <aside class="noter-pic">
+                                  <img width="50" height="50" class="picImg" :src="comment.avatar">
+                                  </aside>
+                                <div class="of">
+                                  <span class="fl"> 
+                                  <font class="fsize12 c-blue"> 
+                                    {{comment.nickname}}</font>
+                                  <font class="fsize12 c-999 ml5">评论：</font></span>
+                                </div>
+                                <div class="noter-txt mt5">
+                                  <p>{{comment.content}}</p>
+                                </div>
+                                <div class="of mt5">
+                                  <span class="fr"><font class="fsize12 c-999 ml5">{{comment.gmtCreate}}</font></span>
+                                </div>
+                              </li>
+                            
+                            </ul>
+                        </section>
+                      </section>
+                      
+                      <!-- 公共分页 开始 -->
+                      <div class="paging">
+                          <!-- undisable这个class是否存在，取决于数据属性hasPrevious -->
+                          <a
+                          :class="{undisable: !data.hasPrevious}"
+                          href="#"
+                          title="首页"
+                          @click.prevent="gotoPage(1)">首</a>
+                          <a
+                          :class="{undisable: !data.hasPrevious}"
+                          href="#"
+                          title="前一页"
+                          @click.prevent="gotoPage(data.current-1)">&lt;</a>
+                          <a
+                          v-for="page in data.pages"
+                          :key="page"
+                          :class="{current: data.current == page, undisable: data.current == page}"
+                          :title="'第'+page+'页'"
+                          href="#"
+                          @click.prevent="gotoPage(page)">{{ page }}</a>
+                          <a
+                          :class="{undisable: !data.hasNext}"
+                          href="#"
+                          title="后一页"
+                          @click.prevent="gotoPage(data.current+1)">&gt;</a>
+                          <a
+                          :class="{undisable: !data.hasNext}"
+                          href="#"
+                          title="末页"
+                          @click.prevent="gotoPage(data.pages)">末</a>
+                          <div class="clear"/>
+                      </div>
+                      <!-- 公共分页 结束 -->
+                      <!-- 课程评论 结束-->
+                    </div>
+                  </div>
               </article>
             </div>
           </section>
@@ -149,14 +224,14 @@
                   <li>
                     <div class="u-face">
                       <a href="#">
-                        <img src="~/assets/photo/teacher/1442297969808.jpg" width="50" height="50" alt>
+                        <img :src="courseWebVo.avatar" width="50" height="50" alt>
                       </a>
                     </div>
                     <section class="hLh30 txtOf">
-                      <a class="c-333 fsize16 fl" href="#">周杰伦</a>
+                      <a class="c-333 fsize16 fl" href="#">{{courseWebVo.teacherName}}</a>
                     </section>
                     <section class="hLh20 txtOf">
-                      <span class="c-999">毕业于北京大学数学系</span>
+                      <span class="c-999">{{courseWebVo.intro}}</span>
                     </section>
                   </li>
                 </ul>
@@ -172,5 +247,81 @@
 </template>
 
 <script>
-export default {};
+import course from '@/api/course'
+import comment from '@/api/comment'
+import login from '@/api/login'
+import cookie from 'js-cookie'
+export default {
+  asyncData({ params, error }) {
+       return {
+         courseId: params.id
+       }
+    },
+    data() {
+    return {
+      data:{},
+      courseId:'',
+      page:1,
+      limit:4,
+      total:10,
+      comment:{
+        content:'',
+        courseId:''
+      },
+      courseWebVo:[],
+      chapterVideoList:[]
+
+    }
+  },
+  created() {
+    this.initCourseInfo()
+    this.initComment()
+  },
+  methods:{
+    //获取课程详情
+    initCourseInfo() {
+      course.getCourseInfoById(this.courseId)
+            .then(response => {
+              console.log(this.courseId)
+              console.log(response.data.data.courseWebVo)
+            this.courseWebVo=response.data.data.courseWebVo
+            this.chapterVideoList=response.data.data.chapterVideoList
+            })
+    },
+
+    initComment(){
+       comment.getPageList(this.page, this.limit, this.courseId).then(response => {
+           this.data = response.data.data
+       })
+    },
+    addComment(){
+        this.comment.courseId = this.courseId
+        this.comment.teacherId = this.courseWebVo.teacherId
+        login.getLoginUserInfo().then(response => {
+          if( cookie.get('token')== ""){
+            alert("请登录后再评论")
+          }
+          else{
+              this.comment.memberId = response.data.data.userInfo.id
+              this.comment.nickname = response.data.data.userInfo.nickname
+              this.comment.avatar = response.data.data.userInfo.avatar
+
+              comment.addComment(this.comment).then(response => {
+                if(response.data.success){
+                    this.comment.content = ''
+                    this.initComment()
+                }
+            })
+          }
+          
+        })
+        
+    },
+    gotoPage(page){
+          comment.getPageList(page, this.limit,this.courseId).then(response => {
+              this.data = response.data.data
+          })
+      }
+  }
+};
 </script>
