@@ -34,12 +34,12 @@
               </span>
             </section>
             <section class="c-attr-mt">
-              <a href="#" title="立即观看" class="comm-btn c-btn-3">立即观看</a>
+              <a @click="createOrders()" href="#" title="立即购买" class="comm-btn c-btn-3">立即购买</a>
             </section>
           </section>
         </aside>
         <aside class="thr-attr-box">
-          <ol class="thr-attr-ol clearfix">
+          <ol class="thr-attr-ol ">
             <li>
               <p>&nbsp;</p>
               <aside>
@@ -251,6 +251,7 @@ import course from '@/api/course'
 import comment from '@/api/comment'
 import login from '@/api/login'
 import cookie from 'js-cookie'
+import orders from '@/api/orders'
 export default {
   asyncData({ params, error }) {
        return {
@@ -278,6 +279,12 @@ export default {
     this.initComment()
   },
   methods:{
+    createOrders(){
+      orders.createOrder(this.courseId)
+      .then(response =>{
+        this.$router.push({path:'/order/'+response.data.data.orderId})
+      })
+    },
     //获取课程详情
     initCourseInfo() {
       course.getCourseInfoById(this.courseId)
