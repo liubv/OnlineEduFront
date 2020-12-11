@@ -18,6 +18,6 @@ export default {
         url: `/eduservice/coursefront/getFrontCourseInfo/${courseId}`,
         method: 'get'
       })
-  }
+  },
 
 }

@@ -33,7 +33,10 @@
                 <a class="c-fff vam" title="收藏" href="#" >收藏</a>
               </span>
             </section>
-            <section class="c-attr-mt">
+            <section v-if="Number(courseWebVo.price) === 0 || isBuy === true" class="c-attr-mt">
+              <a href="#" title="立即观看" class="comm-btn c-btn-3">立即观看</a>
+            </section>
+            <section v-if="Number(courseWebVo.price) != 0 & isBuy === false" class="c-attr-mt">
               <a @click="createOrders()" href="#" title="立即购买" class="comm-btn c-btn-3">立即购买</a>
             </section>
           </section>
@@ -258,7 +261,7 @@ export default {
          courseId: params.id
        }
     },
-    data() {
+  data() {
     return {
       data:{},
       courseId:'',
@@ -269,6 +272,7 @@ export default {
         content:'',
         courseId:''
       },
+      isBuy:false,
       courseWebVo:[],
       chapterVideoList:[]
 
@@ -289,10 +293,10 @@ export default {
     initCourseInfo() {
       course.getCourseInfoById(this.courseId)
             .then(response => {
-              console.log(this.courseId)
-              console.log(response.data.data.courseWebVo)
+              console.log(response.data.data)
             this.courseWebVo=response.data.data.courseWebVo
             this.chapterVideoList=response.data.data.chapterVideoList
+            this.isBuy=response.data.data.isBuy
             })
     },
 
